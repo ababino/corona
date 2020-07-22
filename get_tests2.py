@@ -31,18 +31,19 @@ for mes in ['mayo', 'junio', 'julio']:
 
     # copia pdf
     for url in links:
-        print(url)
+        # print(url)
         fn = os.path.join('data', 'argentina', url.split('/')[-1])
-        if fn not in glob.glob('*.pdf'):
+        if fn not in glob.glob(os.path.join('data', 'argentina', '*.pdf')):
             print('Downloading: {}'.format(fn))
             myfile = requests.get(url, allow_redirects=True)
             open(fn, 'wb').write(myfile.content)
             time.sleep(0.3)
         else:
-            print('{} already downloaded'.format(fn))
+            # print('{} already downloaded'.format(fn))
+            pass
 
         # extrae txt
-        print('extract text')
+        # print('extract text')
         # text = textract.process(fn, encoding='UTF-8',method='pdftotext')
         with open(fn, "rb") as f:
             pdf = pdftotext.PDF(f)
@@ -51,7 +52,7 @@ for mes in ['mayo', 'junio', 'julio']:
         open('parte.txt', 'w').write(text)
 
         # extrae tests
-        print('extract info')
+        # print('extract info')
 
         with open('parte.txt') as infile, open('provs.txt', 'w') as outfile:
             new_data = {}
@@ -69,15 +70,15 @@ for mes in ['mayo', 'junio', 'julio']:
                     if not isinstance(new_data['date'], datetime):
                         new_data['date'] = datetime.strptime(new_data['date'], '%d/%m/%Y')
                     new_data['date'] -= timedelta(days=1)
-                    print('date', new_data['date'])
+                    # print('date', new_data['date'])
                 confirmed_search = confirmed_re.search(line)
                 new_tests_search = new_tests_re.search(line)
                 if confirmed_search:
                     new_data['confirmed'] = int(confirmed_search.group('confirmed').replace('.', ''))
-                    print('confirmed', new_data['confirmed'])
+                    # print('confirmed', new_data['confirmed'])
                 if new_tests_search:
                     new_data['new_tests'] = int(new_tests_search.group('new_tests').replace('.', ''))
-                    print('new tests', new_data['new_tests'])
+                    # print('new tests', new_data['new_tests'])
                 if len(new_data)==3:
                     break
         data.append(new_data)
